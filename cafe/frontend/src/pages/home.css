@@ -1,0 +1,56 @@
+/* src/index.css */
+
+/* 1. Global background that covers the full page */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-image: url("/images/keersuri.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Uncomment to make the background stay fixed while scrolling: */
+  /* background-attachment: fixed; */
+}
+
+/* 2. Optional overlay for improved text readability */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* 3. Your content container */
+.home-container {
+  text-align: center;
+  padding: 40px;
+  /* Use light text for contrast if needed */
+  color: white;
+}
+
+/* 4. Button styling (your existing styles) */
+.home-buttons {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.home-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.home-btn:hover {
+  background-color: #555;
+}
+
