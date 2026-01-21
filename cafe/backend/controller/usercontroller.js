@@ -38,7 +38,9 @@ exports.register = async (req, res) => {
 
     // Check username/email exists
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) return res.status(400).json({ error: 'Username or Email exists' });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username or Email exists' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -59,11 +61,11 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ 
-      message: 'User registered successfully', 
-      userId, 
-      username, 
-      profileImage 
+    res.status(201).json({
+      message: 'User registered successfully',
+      userId,
+      username,
+      profileImage
     });
 
   } catch (err) {
@@ -71,5 +73,49 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+/* ================== ADD THIS PART ================== */
+
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password required' });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || 'secretkey',
+      { expiresIn: '1d' }
+    );
+
+    res.json({
+      message: 'Login successful',
+      token,
+      user: {
+        userId: user.userId,
+        username: user.username,
+        role: user.role,
+        profileImage: user.profileImage
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
 
